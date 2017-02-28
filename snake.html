@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+	Snake Game
+</title>
+<style>
+canvas {
+    border:3px solid #000;
+    background-color: #fff;
+}
+</style>
+</head>
+<body>
+<button id="start_btn">
+	Start
+</button>
+<canvas id='can' width='800px' height='800px' border="1px solid black" style="border: 2px solid black"></canvas>
+<script>
+	/*var canvas = document.getElementById('can');
+	var ctx = canvas.getContext('2d');
+	var score = 0;
+	var snake;
+	var food;
+	var size=10;
+	var h=800;
+	var w=800;*/
+var btn = document.getElementById("start_btn");
+var canvas = document.getElementById('can');
+var ctx = canvas.getContext('2d');
+var score = 0;
+var snake;
+var food;
+var size=10;
+var hi=800;
+var wi=800;
+var board =(function(){
+	var Snake = function(x,y){
+		ctx.fillStyle = 'blue';
+		ctx.fillRect(x*size,y*size,size,size);
+	}
+	var updatesnake = function(){
+		var len = 3;
+		snake = [];
+		for(var i=len-1;i>=0;i--){
+			snake.push({x:i,y:0});
+		}
+	}
+	var Food = function(x,y){
+		ctx.fillStyle = 'red';
+		ctx.fillRect(x*size+1,y*size+1,size,size);
+	}
+	var finalscore = function(){
+		var sc = "Score"+score;
+		ctx.fillStyle = 'black';
+		ctx.font = '18px Arial';
+		ctx.fillText(sc,wi,0);
+	}
+
+	var move = function(){
+		ctx.fillStyle = 'white';
+		ctx.fillRect = (0,0,wi,hi);
+		btn.setAttribute('disabled',true);
+		var snakeX = snake[0].x;
+		var snakeY = snake[0].y;
+		if(d=='right')
+			snakeX++;
+		else if(d=='left')
+			snakeX--;
+		else if(d=='up')
+			snakeY--;
+		else if(d=='down')
+			snakeY++;
+
+		if(snakeX==-1 || snakeX==wi/size || snakeY==-1 || snakeY==hi/size || check(snakeX,snakeY,snake)){
+			score=0;
+			btn.removeAttribute('disabled',true);
+			ctx.clearRect(0,0,wi,hi);
+			time=clearInterval(time);
+			return;
+		}
+		if(snakeX==food.x && snakeY==food.y){
+			var tail = {x:snakeX,y:snakeY};
+			score++;
+			createfood();
+		}else{
+			var tail = snake.pop();
+			tail.x = snakeX;
+			tail.y = snakeY;
+		}
+		snake.unshift(tail);
+		for(var i=0;i<snake.length;i++){
+			Snake(snake[i].x,snake[i].y);
+		}
+		Food(food.x,food.y);
+		finalscore();
+	}
+
+	var createfood = function(){
+		food={
+			x: Math.floor((Math.random()*50)+1),
+			y: Math.floor((Math.random()*50)+1)
+		}
+		for(var i=0;i>snake.length;i++){
+			var snakeX=snake[i].x;
+			var snakeY=snake[i].y;
+			if(food.x==snakeX && food.y==snakeY || food.y==snakeY && food.x==snakeX) {
+				food.x=((Math.random()*50)+1);
+				food.y=((Math.random()*50)+1);
+			}
+		}
+	}
+
+	var check = function(x,y,arr){
+		for(var i=0;i<arr.length;i++){
+			if(arr[i].x==x && arr[i].y==y){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	var init = function(){
+		d = 'down';
+		updatesnake();
+		createfood();
+		time = setInterval(move,80);
+	}
+
+	return{
+		init:init
+	};
+}());
+
+(function(board){
+	
+	btn.addEventListener("click",function(){
+		board.init();
+	});
+	document.onkeydown=function(event){
+		key = window.event.keyCode;
+		switch(key){
+			case 37: if(d!='right')
+						d='left';
+						break;
+			case 38: if(d!='left')
+						d='right';
+						break;
+			case 39: if(d!='down')
+						d='up';
+						break;
+			case 40: if(d!='up')
+						d='down';
+						break;
+		}
+	}
+})
+(board);
+</script>
+</body>
+</html>
